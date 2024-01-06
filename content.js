@@ -37,14 +37,33 @@ function fetchDislikes(problemSlug) {
 
 // Function to display the dislikes count on the page
 function displayDislikes(dislikes) {
-    console.log(dislikes)
-    return;
+    const dislikesContainer = document.querySelector('svg[data-icon="thumbs-down"]').parentNode.parentNode;
+
+    if (dislikesContainer) {
+        // Create a new span element to hold the dislikes count
+        let dislikesCountSpan = dislikesContainer.querySelector('.dislikes-count');
+        if (!dislikesCountSpan) {
+            dislikesCountSpan = document.createElement('span');
+            dislikesCountSpan.className = 'dislikes-count'; // Assign any necessary classes here
+            dislikesContainer.appendChild(dislikesCountSpan);
+        }
+
+        // Set the dislikes count text
+        dislikesCountSpan.textContent = dislikes;
+    }
 }
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.action === "fetchDislikes") {
+        const problemSlug = getProblemSlug();
+        if (problemSlug) {
+            fetchDislikes(problemSlug);
+        }
+    }
+});
 
 // Main execution
 const problemSlug = getProblemSlug();
 if (problemSlug) {
     fetchDislikes(problemSlug);
 }
-
-
