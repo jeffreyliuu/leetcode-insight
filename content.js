@@ -1,3 +1,10 @@
+// This function checks if the URL path has changed (indicating a new problem page)
+function hasURLChanged(oldURL, newURL) {
+    const oldPath = new URL(oldURL).pathname;
+    const newPath = new URL(newURL).pathname;
+    return oldPath !== newPath;
+}
+
 // Function to extract the problem slug from the URL
 function getProblemSlug() {
     const regex = /https:\/\/leetcode\.com\/problems\/(.*?)\//;
@@ -53,17 +60,48 @@ function displayDislikes(dislikes) {
     }
 }
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    if (request.action === "fetchDislikes") {
-        const problemSlug = getProblemSlug();
-        if (problemSlug) {
-            fetchDislikes(problemSlug);
-        }
+// Main execution
+function updateDislikes() {
+    // Clear any previously added dislikes count
+    const existingDislikes = document.querySelector('.dislikes-count');
+    if (existingDislikes) {
+        existingDislikes.remove();
     }
+
+    // Fetch and display the new dislikes count
+    const problemSlug = getProblemSlug();
+    if (problemSlug) {
+        fetchDislikes(problemSlug);
+    }
+}
+
+// Global variable to store the last URL (needed to detect URL changes)
+let lastURL = window.location.href;
+
+// This function sets up a MutationObserver to observe changes in the body and updates dislikes when necessary
+function observePageUpdates() {
+  const observer = new MutationObserver(() => {
+    const currentURL = window.location.href;
+    // Only update dislikes if the URL path has changed and the new URL contains '/problems/'
+    if (hasURLChanged(lastURL, currentURL) && currentURL.includes('/problems/')) {
+      updateDislikes();
+      lastURL = currentURL; // Update the last URL to the current URL
+    }
+  });
+
+  // Start observing the body for child list changes
+  observer.observe(document.body, { childList: true, subtree: true });
+}
+
+// Listen for messages from the popup or background script
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.action === "fetchDislikes") {
+    updateDislikes(); // Call updateDislikes to refresh the dislikes count
+  }
 });
 
-// Main execution
-const problemSlug = getProblemSlug();
-if (problemSlug) {
-    fetchDislikes(problemSlug);
-}
+// Call to update dislikes on initial page load
+updateDislikes();
+
+// Set up the observer to monitor for page updates
+observePageUpdates();
