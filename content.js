@@ -1,11 +1,11 @@
-// This function checks if the URL path has changed (indicating a new problem page)
+// Function that checks if the URL path has changed (new problem page)
 function hasURLChanged(oldURL, newURL) {
     const oldPath = new URL(oldURL).pathname;
     const newPath = new URL(newURL).pathname;
     return oldPath !== newPath;
 }
 
-// Function to extract the problem slug from the URL
+// Function to extract the problem slug from URL
 function getProblemSlug() {
     const regex = /https:\/\/leetcode\.com\/problems\/(.*?)\//;
     const match = window.location.href.match(regex);
@@ -37,10 +37,20 @@ function fetchDislikes(problemSlug) {
         .then(response => response.json())
         .then(data => {
             const dislikes = data.data.question.dislikes;
+            const formattedDislikes = formatDislikesCount(dislikes);
+
             displayDislikes(dislikes);
         })
         .catch(error => console.error('Error:', error));
 }
+
+// Utility function to format the number of dislikes
+function formatDislikesCount(dislikes) {
+    if (dislikes >= 1000) {
+      return (dislikes / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+    }
+    return dislikes.toString();
+  }
 
 // Function to display the dislikes count on the page
 function displayDislikes(dislikes) {
@@ -51,7 +61,7 @@ function displayDislikes(dislikes) {
         let dislikesCountSpan = dislikesContainer.querySelector('.dislikes-count');
         if (!dislikesCountSpan) {
             dislikesCountSpan = document.createElement('span');
-            dislikesCountSpan.className = 'dislikes-count'; // Assign any necessary classes here
+            dislikesCountSpan.className = 'dislikes-count';
             dislikesContainer.appendChild(dislikesCountSpan);
         }
 
@@ -75,7 +85,7 @@ function updateDislikes() {
     }
 }
 
-// Global variable to store the last URL (needed to detect URL changes)
+// Global variable to store the last URL
 let lastURL = window.location.href;
 
 // This function sets up a MutationObserver to observe changes in the body and updates dislikes when necessary
@@ -96,7 +106,7 @@ function observePageUpdates() {
 // Listen for messages from the popup or background script
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === "fetchDislikes") {
-    updateDislikes(); // Call updateDislikes to refresh the dislikes count
+    updateDislikes();
   }
 });
 

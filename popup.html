@@ -4,31 +4,78 @@
 <head>
     <title>LeetCode Dislikes Viewer</title>
     <style>
-        /* Add your styling here */
-        body {
-            font-family: Arial, sans-serif;
-            padding: 10px;
-            width: 200px;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
-
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            padding: 15px;
+            background-color: #1E1E1E; /* Dark background */
+            color: #ffffff; /* White text */
+            width: 260px;
+            border-radius: 8px; /* Rounded corners */
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+        header {
+            background-color: #FFA116; /* LeetCode yellow */
+            color: #ffffff; /* White text */
+            padding: 12px;
+            margin-bottom: 15px;
+            text-align: center;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        button {
+            background-color: #2D2D30; /* Slightly lighter dark background for button */
+            color: #ffffff; /* White text */
+            border: none;
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            font-size: 0.9em;
+        }
+        button:hover {
+            background-color: #4B4B4D; /* Button hover state */
+            transform: translateY(-2px);
+        }
+        button:active {
+            background-color: #3C3C3F; /* Button active state */
+            transform: translateY(0);
+        }
         .footer {
-            margin-top: 20px;
+            color: #BBBBBB; /* Light grey text */
+            margin-top: auto; /* Push the footer to the bottom */
             font-size: 0.8em;
             text-align: center;
+        }
+        .heart {
+            color: #e25555; /* Red heart color */
+            font-size: 1.1em;
         }
     </style>
 </head>
 
 <body>
-    <h3>LeetCode Dislikes Viewer</h3>
-    <p>Click the button to view dislikes for the current problem.</p>
+    <header>
+        <h3>LeetCode Dislikes Viewer</h3>
+    </header>
+
     <button id="fetchDislikes">View Dislikes</button>
 
-    <!-- Optional: Display results or status messages -->
     <div id="dislikesResult"></div>
 
     <div class="footer">
-        <p>Made with ❤ for LeetCode users</p>
+        <p>Made with <span class="heart">&hearts;</span> for LeetCode users</p>
     </div>
 </body>
 <script src="popup.js"></script>
