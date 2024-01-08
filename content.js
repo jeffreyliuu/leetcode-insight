@@ -103,6 +103,25 @@ function observePageUpdates() {
   observer.observe(document.body, { childList: true, subtree: true });
 }
 
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.action === "generateTestCases") {
+        generateTestCases();
+    }
+});
+
+// Placeholder function for generating test cases
+function generateTestCases() {
+    // Logic for generating test cases
+    let testCases = [
+        'Input: nums = [2,7,11,15], target = 9',
+        'Output: [0,1]'
+        // ... more test cases ...
+    ];
+
+    // Send the test cases back to the popup
+    chrome.runtime.sendMessage({action: "displayTestCases", testCases: testCases});
+}
+
 // Listen for messages from the popup or background script
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === "fetchDislikes") {

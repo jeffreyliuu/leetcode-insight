@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
-    "name": "LeetCode fun",
-    "description": "A brief description",
+    "name": "LeetTool",
+    "description": "An extension that helps make your LeetCode experience easier.",
     "version": "1.0",
     "permissions": [
       "activeTab"
