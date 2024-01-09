@@ -1,0 +1,18 @@
+# Node.js
+api/node_modules
+api/npm-debug.log
+
+# Chrome Extension
+/extension/*.log
+/extension/*.pem
+
+# Editors
+.vscode/
+.idea/
+
+# Other files and folders
+*.log
+*.tmp
+*.tmp.*
+temp/
+tmp/
