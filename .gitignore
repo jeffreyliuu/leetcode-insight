@@ -1,6 +1,7 @@
 # Node.js
-api/node_modules
-api/npm-debug.log
+/api/node_modules
+/api/npm-debug.log
+api/.env
 
 # Chrome Extension
 /extension/*.log
