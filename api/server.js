@@ -19,12 +19,28 @@ app.post('/generate-test-cases', async (req, res) => {
     }
 });
 
+// Function that uses OpenAI to obtain generated test cases
 async function generateTestCases(problemData) {
-    // Implement the logic to call OpenAI's API and process the response
-    // ...
+    const prompt = createPrompt(problemData);
+    const response = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
+        prompt: prompt,
+        max_tokens: 150
+    }, {
+        headers: {
+            'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+            'Content-Type': 'application/json'
+        }
+    });
 
-    return []; // Return test cases
+    const testCases = response.data.choices[0].text;
+    console.log(testCases);
+    return testCases;
 }
+
+function createPrompt({ problemStatement, constraints, examples }) {
+    return `Given the problem statement: ${problemStatement}, with constraints: ${constraints}, and examples: ${examples}, generate 3 test cases.`;
+}
+
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

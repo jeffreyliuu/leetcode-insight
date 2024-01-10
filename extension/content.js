@@ -1,5 +1,3 @@
-
-
 // Helper Functions
 function getProblemSlug() {
     const regex = /https:\/\/leetcode\.com\/problems\/(.*?)\//;
@@ -61,15 +59,12 @@ function parseContent(htmlContent) {
             }
         }
     });
-
     return {
         problemStatement: "Problem Statement:\n\n" + problemStatement,
         constraints: "Constraints:\n\n" + constraints,
         examples: "Examples:\n\n" + examples.join('\n\n')
     };
 }
-
-
 
 
 // Function to make the GraphQL API request
@@ -169,7 +164,6 @@ function generateTestCases() {
         'Output: [0,1]'
         // ... more test cases ...
     ];
-
     // Send the test cases back to the popup
     chrome.runtime.sendMessage({ action: "displayTestCases", testCases: testCases });
 }
@@ -242,6 +236,23 @@ function fetchAndParseProblemContent(slug) {
     });
 }
 
+
+function fetchTestCases(problemData) {
+    fetch('http://localhost:3000/generate-test-cases', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(problemData)
+    })
+        .then(response => response.json())
+        .then(data => {
+            // Send the test cases back to the popup
+            chrome.runtime.sendMessage({ action: "displayTestCases", testCases: data.testCases });
+        })
+        .catch(error => console.error('Error:', error));
+}
+
 // Main Message Listener
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.action === "fetchDislikes") {
@@ -250,7 +261,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         const slug = getProblemSlug();
         if (slug) {
             fetchAndParseProblemContent(slug).then(parsedContent => {
-                sendResponse({ action: "displayParsedContent", content: parsedContent });
+                fetchTestCases(parsedContent);
             }).catch(error => console.error('Error:', error));
             return true; // Indicate async response
         }

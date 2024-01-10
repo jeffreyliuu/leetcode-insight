@@ -35,19 +35,3 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         outputDiv.textContent = request.testCases.join('\n');
     }
 });
-
-
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    if (request.action === "displayParsedContent") {
-        const { problemStatement, constraints, examples } = request.content;
-        const outputDiv = document.getElementById('output');
-        outputDiv.innerHTML = `
-            <h4>Problem Statement:</h4>
-            <p>${problemStatement}</p>
-            <h4>Constraints:</h4>
-            <p>${constraints}</p>
-            <h4>Examples:</h4>
-            ${examples.map(example => `<pre>${example}</pre>`).join('')}
-        `;
-    }
-});
