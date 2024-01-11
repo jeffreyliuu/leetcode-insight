@@ -247,6 +247,7 @@ function fetchTestCases(problemData) {
     })
         .then(response => response.json())
         .then(data => {
+            console.log('data');
             // Send the test cases back to the popup
             chrome.runtime.sendMessage({ action: "displayTestCases", testCases: data.testCases });
         })

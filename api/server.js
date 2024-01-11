@@ -1,9 +1,11 @@
 const express = require('express');
 const axios = require('axios');
 require('dotenv').config();
+const cors = require('cors');
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 const PORT = process.env.PORT || 3000;
 
@@ -12,6 +14,7 @@ app.post('/generate-test-cases', async (req, res) => {
     try {
         const problemData = req.body;
         const testCases = await generateTestCases(problemData);
+        console.log(testCases);
         res.json({ testCases });
     } catch (error) {
         console.error('Error:', error);
@@ -22,6 +25,7 @@ app.post('/generate-test-cases', async (req, res) => {
 // Function that uses OpenAI to obtain generated test cases
 async function generateTestCases(problemData) {
     const prompt = createPrompt(problemData);
+    console.log(prompt)
     const response = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
         prompt: prompt,
         max_tokens: 150
@@ -33,7 +37,7 @@ async function generateTestCases(problemData) {
     });
 
     const testCases = response.data.choices[0].text;
-    console.log(testCases);
+    console.log(`response: ${JSON.stringify(response)}`);
     return testCases;
 }
 
